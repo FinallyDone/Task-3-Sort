@@ -74,6 +74,10 @@ var imgBackgroundSorting = new Image();
 var imgButtonSortQuick = new Image();
 // Картинка кнопки "Пузырьковая Сортировка"
 var imgButtonSortBubble = new Image();
+// Картинка кнопки "Шейкерная Сортировка"
+var imgButtonSortShaker = new Image();
+// Картинка кнопки "Четно-нечетная Сортировка"
+var imgButtonSortEvenOdd = new Image();
 // Картинка для отображения, какая кнопка выбрана
 var imgButtonChosen = new Image();
 
@@ -92,6 +96,12 @@ var imgButtonSortQuickHeight = 75;
 // Размер кнопки "Пузырьковая Сортировка"
 var imgButtonSortBubbleWidth = 325;
 var imgButtonSortBubbleHeight = 75;
+// Размер кнопки "Шейкерная Сортировка"
+var imgButtonSortShakerWidth = 325;
+var imgButtonSortShakerHeight = 75;
+// Размер кнопки "Четно-нечетная Сортировка"
+var imgButtonSortEvenOddWidth = 325;
+var imgButtonSortEvenOddHeight = 75;
 // Размер картинки отображения, какая кнопка выбрана
 var imgButtonChosenWidth = 350;
 var imgButtonChosenHeight = 100;
@@ -106,6 +116,12 @@ var imgButtonSortQuickPosY = 25;
 // Позиция кнопки "Пузырьковая Сортировка"
 var imgButtonSortBubblePosX = 360;
 var imgButtonSortBubblePosY = 25;
+// Позиция кнопки "Шейкерная Сортировка"
+var imgButtonSortShakerPosX = 20;
+var imgButtonSortShakerPosY = 120;
+// Позиция кнопки "Четно-нечетная Сортировка"
+var imgButtonSortEvenOddPosX = 360;
+var imgButtonSortEvenOddPosY = 120;
 
 //////////////////////////////////// Functions ////////////////////////////////////////
 
@@ -150,17 +166,31 @@ function renderButtonsField() {
     if (checkButtonQuickSort) {
         switch (whichButtonWasClicked) {
             case 1:
+                // Пользователь навел курсор на кнопку "Быстрая Сортировка"
                 ctxButtons.drawImage(imgButtonChosen, imgButtonSortQuickPosX - 12.5, imgButtonSortQuickPosY - 12.5, imgButtonChosenWidth, imgButtonChosenHeight);
                 break;
             case 2:
+                // Пользователь навел курсор на кнопку "Пузырьковая Сортировка"
                 ctxButtons.drawImage(imgButtonChosen, imgButtonSortBubblePosX - 12.5, imgButtonSortBubblePosY - 12.5, imgButtonChosenWidth, imgButtonChosenHeight);
+                break;
+            case 3:
+                // Пользователь навел курсор на кнопку "Шейкерная Сортировка"
+                ctxButtons.drawImage(imgButtonChosen, imgButtonSortShakerPosX - 12.5, imgButtonSortShakerPosY - 12.5, imgButtonChosenWidth, imgButtonChosenHeight);
+                break;
+            case 4:
+                // Пользователь навел курсор на кнопку "Четно-нечетная Сортировка"
+                ctxButtons.drawImage(imgButtonChosen, imgButtonSortEvenOddPosX - 12.5, imgButtonSortEvenOddPosY - 12.5, imgButtonChosenWidth, imgButtonChosenHeight);
                 break;
         }
     }
     // Рисуем кнопку "Быстрая Сортировка"
     ctxButtons.drawImage(imgButtonSortQuick, imgButtonSortQuickPosX, imgButtonSortQuickPosY, imgButtonSortQuickWidth, imgButtonSortQuickHeight);
-    // Рисуем кнопку "зырьковая Сортировка"
+    // Рисуем кнопку "Пузырьковая Сортировка"
     ctxButtons.drawImage(imgButtonSortBubble, imgButtonSortBubblePosX, imgButtonSortBubblePosY, imgButtonSortBubbleWidth, imgButtonSortBubbleHeight);
+    // Рисуем кнопку "Шейкерная Сортировка"
+    ctxButtons.drawImage(imgButtonSortShaker, imgButtonSortShakerPosX, imgButtonSortShakerPosY, imgButtonSortShakerWidth, imgButtonSortShakerHeight);
+    // Рисуем кнопку "Четно-нечетная Сортировка"
+    ctxButtons.drawImage(imgButtonSortEvenOdd, imgButtonSortEvenOddPosX, imgButtonSortEvenOddPosY, imgButtonSortEvenOddWidth, imgButtonSortEvenOddHeight);
 }
 
 /* Создание массива с рандомными числами */
@@ -206,10 +236,98 @@ function setUpAllImgs() {
     imgBackgroundSorting.src = srcImgs + "background-display-sort.png";
     imgButtonSortQuick.src = srcImgs + "button-sort-fast.png";
     imgButtonSortBubble.src = srcImgs + "button-sort-bubble.png";
+    imgButtonSortShaker.src = srcImgs + "button-sort-shaker.png";
+    imgButtonSortEvenOdd.src = srcImgs + "button-sort-even-odd.png";
     imgButtonChosen.src = srcImgs + "button-glowing.png";
 }
 
-/* Быстрая сортировка */
+/*          !!!  !!!  !!! 
+    Каждая сортировка имеет 2 тип:
+    isClass:
+        -false Сортировка для массива с числами
+        -true Сортировка для массива с классами ч/з value
+*/
+
+/* Четно-нечетная Сортировка */
+function sortEvenOdd(array, isClass) {
+    let n = array.length;
+    let isSorted = 0;
+    let temp;
+    while (isSorted == 0) {
+        isSorted = 1;
+        temp = 0;
+        if (isClass) {
+            for (let i = 1; i < n - 1; i += 2) {
+                if (array[i].value > array[i + 1].value) {
+                    Swap(array, i, i + 1, true);
+                    isSorted = 0;
+                }
+            }
+            for (let i = 0; i < n - 1; i += 2) {
+                if (array[i].value > array[i + 1].value) {
+                    Swap(array, i, i + 1, true);
+                    isSorted = 0;
+                }
+            }
+        } else {
+            for (let i = 1; i < n - 1; i += 2) {
+                if (array[i] > array[i + 1]) {
+                    Swap(array, i, i + 1, false);
+                    isSorted = 0;
+                }
+            }
+            for (let i = 0; i < n - 1; i += 2) {
+                if (array[i] > array[i + 1]) {
+                    Swap(array, i, i + 1, false);
+                    isSorted = 0;
+                }
+            }
+        }
+    }
+}
+
+/* Шейкерная Сортировка */
+function sortShaker(array, isClass) {
+    let beg, end;
+    let count = 0;
+
+    for (let i = 0; i < (array.length / 2); i++) {
+        beg = 0;
+        end = array.length - 1;
+
+        do {
+            count += 2;
+            // Идем спереди 
+            if (isClass) {
+                if (array[beg].value > array[beg + 1].value)
+                    Swap(array, beg, beg + 1, true);
+                //сдвигаем позицию вперед
+                beg++;
+
+            } else {
+                if (array[beg] > array[beg + 1])
+                    Swap(array, beg, beg + 1, false);
+                // Сдвигаем позицию вперед
+                beg++;
+            }
+
+            // Идем сзади
+            if (isClass) {
+                if (array[end - 1].value > array[end].value)
+                    Swap(array, end - 1, end, true);
+            } else {
+                if (array[end - 1] > array[end])
+                    Swap(array, end - 1, end, false);
+            }
+            // Сдвигаем позицию назад
+            end--;
+
+        }
+        while (beg <= end);
+    }
+}
+
+/* Пузырьковая Сортировка */
 function sortBubble(array, isClass) {
     for (let j = array.length - 1; j > 0; j--) {
         for (let i = 0; i < j; i++) {
@@ -229,7 +347,7 @@ function sortBubble(array, isClass) {
 }
 
 
-/* Сортировка - быстрая */
+/* Быстрая сортировка */
 function sortQuick(array, left, right, isClass) {
     var index;
     if (array.length > 1) {
@@ -288,8 +406,8 @@ function partition(array, left, right, isClass) {
     return i;
 }
 
-/* Из-за алгортима быстрой сортировки, повторяющиеся элементы имеют не верные индексы, эта функция исправляет данную оплошность */
-function repairArrayAfterQuickSort(array) {
+/* Из-за некоторыъ алгоритмов повторяющийся элементы имеют не верные индексы, эта функция исправляет данную оплошность */
+function repairArrayAfterSort(array) {
     // работает по примеру пузырьковой сортировки 
     for (let j = array.length - 1; j > 0; j--) {
         for (let i = 0; i < j; i++) {
@@ -332,6 +450,16 @@ document.querySelector(".display-buttons__canvas").addEventListener('mousemove',
         whichButtonWasClicked = 2;
         checkButtonQuickSort = true;
         renderButtonsField();
+    } else if (x > imgButtonSortShakerPosX && x < (imgButtonSortShakerPosX + imgButtonSortShakerWidth) && y > imgButtonSortShakerPosY && y < (imgButtonSortShakerPosY + imgButtonSortShakerHeight)) {
+        // Пользователь навел курсор на "Шейкерная Сортировка"
+        whichButtonWasClicked = 3;
+        checkButtonQuickSort = true;
+        renderButtonsField();
+    } else if (x > imgButtonSortEvenOddPosX && x < (imgButtonSortEvenOddPosX + imgButtonSortEvenOddWidth) && y > imgButtonSortEvenOddPosY && y < (imgButtonSortEvenOddPosY + imgButtonSortEvenOddHeight)) {
+        // Пользователь навел курсор на "Четно-нечетнеая Сортировка"
+        whichButtonWasClicked = 4;
+        checkButtonQuickSort = true;
+        renderButtonsField();
     } else {
         renderButtonsField();
         whichButtonWasClicked = 0;
@@ -366,7 +494,7 @@ document.querySelector(".display-buttons__canvas").addEventListener("click", fun
             // Сортируем массив классов
             sortQuick(tempStars, 0, stars.length - 1, true);
             // Исправляем оплошность алгоритма с индексацией
-            repairArrayAfterQuickSort(tempStars);
+            repairArrayAfterSort(tempStars);
             var countForTimer = 0;
             timerForAnimation = setInterval(function () {
                 renderSortingField(historyOfChanges[countForTimer]);
@@ -398,6 +526,68 @@ document.querySelector(".display-buttons__canvas").addEventListener("click", fun
             let tempStars = stars.slice(0);
             // Сортируем массив классов
             sortBubble(tempStars, true);
+            var countForTimer = 0;
+            timerForAnimation = setInterval(function () {
+                renderSortingField(historyOfChanges[countForTimer]);
+                countForTimer++;
+            }, timerMillSecondsForAnimation);
+        }, 2000);
+    }
+    // Пользователь кликнул на "Шейкерная Сортировка"
+    if (x > imgButtonSortShakerPosX && x < (imgButtonSortShakerPosX + imgButtonSortShakerWidth) &&
+        y > imgButtonSortShakerPosY && y < (imgButtonSortShakerPosY + imgButtonSortShakerHeight)) {
+        clearTimeout(timer);
+        clearTimeout(timerForAnimation);
+        // Подготовка и рандом массива элементов 
+        setUpAllElemets();
+        // Рендерим не отсортированный массив
+        renderSortingField(stars);
+        // Меняем частоту обновления кадров для быстрой анимации
+        if (stars.length > 100) {
+            timerMillSecondsForAnimation = 1;
+        } else if (stars.length > 60) {
+            timerMillSecondsForAnimation = 5;
+        } else if (stars.length > 30) {
+            timerMillSecondsForAnimation = 10;
+        } else {
+            timerMillSecondsForAnimation = 70;
+        }
+        timer = setTimeout(function () {
+            // Копируем массив, чтобы отсортировать его и запомнить каждый шаг сортировки, но не менять оригинальный
+            let tempStars = stars.slice(0);
+            // Сортируем массив классов
+            sortShaker(tempStars, true);
+            var countForTimer = 0;
+            timerForAnimation = setInterval(function () {
+                renderSortingField(historyOfChanges[countForTimer]);
+                countForTimer++;
+            }, timerMillSecondsForAnimation);
+        }, 2000);
+    }
+    // Пользователь кликнул на "Четно-нечетную Сортировку"
+    if (x > imgButtonSortEvenOddPosX && x < (imgButtonSortEvenOddPosX + imgButtonSortEvenOddWidth) &&
+        y > imgButtonSortEvenOddPosY && y < (imgButtonSortEvenOddPosY + imgButtonSortEvenOddHeight)) {
+        clearTimeout(timer);
+        clearTimeout(timerForAnimation);
+        // Подготовка и рандом массива элементов 
+        setUpAllElemets();
+        // Рендерим не отсортированный массив
+        renderSortingField(stars);
+        // Меняем частоту обновления кадров для быстрой анимации
+        if (stars.length > 100) {
+            timerMillSecondsForAnimation = 1;
+        } else if (stars.length > 60) {
+            timerMillSecondsForAnimation = 3;
+        } else if (stars.length > 30) {
+            timerMillSecondsForAnimation = 10;
+        } else {
+            timerMillSecondsForAnimation = 70;
+        }
+        timer = setTimeout(function () {
+            // Копируем массив, чтобы отсортировать его и запомнить каждый шаг сортировки, но не менять оригинальный
+            let tempStars = stars.slice(0);
+            // Сортируем массив классов
+            sortEvenOdd(tempStars, true);
             var countForTimer = 0;
             timerForAnimation = setInterval(function () {
                 renderSortingField(historyOfChanges[countForTimer]);
