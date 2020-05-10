@@ -461,9 +461,9 @@ document.querySelector(".display-buttons__canvas").addEventListener('mousemove',
         checkButtonQuickSort = true;
         renderButtonsField();
     } else {
-        renderButtonsField();
         whichButtonWasClicked = 0;
         checkButtonQuickSort = false;
+        renderButtonsField();
     }
 });
 
