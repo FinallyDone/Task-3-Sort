@@ -26,3 +26,6 @@ body {
     position: relative;  
     background-image: url("../materials/png/background-body.png")    ;
 }
+.display-sort{
+    margin: 20px;
+}
